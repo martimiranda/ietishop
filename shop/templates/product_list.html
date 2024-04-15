@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=-, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Llistat de Productes</h1>
+    {% if categoria %}
+     <h2>Productes relacionats amb {{categoria}}</h2>
+    {% endif %}
+    <ul>
+        {% for producte in productes %}
+        <li>{{producte.nom}}</li>
+        {% endfor %}
+    </ul>
+    {% if categories %}
+    <h1>Llistat de Categories</h1>
+    <ul>
+        {% for categoria in categories %}
+        <li><a href=/shop/cat/{{categoria.id}}>{{categoria.nom}}</a></li>
+        {% endfor %}
+    </ul>
+    
+
+    <h2>AJAX categorias</h2>
+    <select>
+        {% for categoria in categories %}
+        <option value="{{categoria.id}}">{{categoria.nom}}</option>
+        {% endfor %}
+    </select>
+        <ul id="ajax">
+
+        </ul>
+    {% endif %}
+
+    <script>
+        function displayProds(res){
+            console.log(res);
+            const productes = res.productes
+            $('#ajax').empty()
+            productes.forEach(producte => {
+                $('#ajax').append(
+                    `<li>${producte.nom}</li>`
+                )
+            })
+        }
+        $('select').on('change', function(){
+            var id = $(this).val()
+            $.ajax({
+                url: "http://localhost:8000/shop/api/prods/"+id,
+                method: "GET",
+                success: displayProds
+                
+            })
+        })
+    </script>
+</body>
+</html>
